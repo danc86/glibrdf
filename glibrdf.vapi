@@ -26,7 +26,7 @@
 
 using GLib;
 
-[CCode (cheader_filename = "librdf.h")]
+[CCode (cheader_filename = "glibrdf.h")]
 namespace Rdf {
 	/***************************************************************************
 	 * World
@@ -402,7 +402,8 @@ namespace Rdf {
 	[CCode (cname = "librdf_node",
                 const_cname = "librdf_node",
 	        copy_function = "librdf_new_node_from_node",
-	        free_function = "librdf_free_node")]
+                free_function = "librdf_free_node",
+                type_id = "G_TYPE_RDF_NODE")]
 	public class Node {
 		[CCode (cname = "librdf_new_node")]
 		public Node (World world);

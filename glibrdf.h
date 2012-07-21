@@ -5,6 +5,7 @@
 #include <glib-object.h>
 #include <librdf.h>
 
-/* nothing here yet... */
+GType librdf_node_get_gtype(void);
+#define G_TYPE_RDF_NODE librdf_node_get_gtype()
 
 #endif
