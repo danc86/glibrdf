@@ -398,7 +398,9 @@ namespace Rdf {
 	}
 
 	[Compact]
+        [Immutable]
 	[CCode (cname = "librdf_node",
+                const_cname = "librdf_node",
 	        copy_function = "librdf_new_node_from_node",
 	        free_function = "librdf_free_node")]
 	public class Node {
