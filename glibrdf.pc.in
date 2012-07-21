@@ -1,0 +1,9 @@
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
+
+Name: glibrdf
+Description: GLib wrapper for Redland RDF library
+Requires: @REQUIRES@
+Version: @VERSION@
+Libs: -L${libdir} -lglibrdf
+Cflags: -I${includedir}
