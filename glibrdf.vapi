@@ -444,7 +444,7 @@ namespace Rdf {
 		[CCode (cname = "librdf_node_get_literal_value_as_latin1")]
 		public uint8[]? get_literal_value_as_latin1 ();
 		[CCode (cname = "librdf_node_get_literal_value_language")]
-		public uint8[]? get_literal_value_language ();  /* ASCII result */
+                public unowned string? get_literal_value_language ();
 		[CCode (cname = "librdf_node_get_literal_value_is_wf_xml")]
 		public bool get_literal_value_is_wf_xml ();
 		[CCode (cname = "librdf_node_get_literal_value_datatype_uri")]
