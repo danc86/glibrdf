@@ -13,7 +13,7 @@ REQUIRES = glib-2.0 gobject-2.0 raptor2 redland
 
 CC = gcc
 CFLAGS ?= -g -O -Wall
-CFLAGS += -fPIC -std=c99 $(shell pkg-config --cflags $(REQUIRES))
+CFLAGS += -fPIC -std=c99 -D_XOPEN_SOURCE $(shell pkg-config --cflags $(REQUIRES))
 LD = gcc
 LDFLAGS ?= -Wl,--as-needed -Wl,-O1
 LIBS = $(shell pkg-config --libs $(REQUIRES))

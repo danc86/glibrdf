@@ -449,6 +449,8 @@ namespace Rdf {
 		public bool get_literal_value_is_wf_xml ();
 		[CCode (cname = "librdf_node_get_literal_value_datatype_uri")]
 		public unowned Uri? get_literal_value_datatype_uri ();
+                [CCode (cname = "librdf_node_get_literal_gvalue")]
+                public GLib.Value get_literal_gvalue();
 
 		[CCode (cname = "librdf_node_get_li_ordinal")]
 		public int get_li_ordinal ();
