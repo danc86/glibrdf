@@ -1,4 +1,10 @@
 
+/*
+ * glibrdf.c
+ * Copyright 2012 Dan Callaghan <djc@djc.id.au>
+ * Licensed under GPLv3
+ */
+
 #include <stdbool.h>
 #include <time.h>
 #include "glibrdf.h"

@@ -1,4 +1,10 @@
 
+/*
+ * glibrdf.h
+ * Copyright 2012 Dan Callaghan <djc@djc.id.au>
+ * Licensed under GPLv3
+ */
+
 #ifndef _GLIBRDF_H
 #define _GLIBRDF_H
 
