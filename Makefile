@@ -19,6 +19,7 @@ LDFLAGS ?= -Wl,--as-needed -Wl,-O1
 LIBS = $(shell pkg-config --libs $(REQUIRES))
 
 OBJECTS = glibrdf.o
+TEST_OBJECTS = tests.o test_literal_gvalue.o
 
 .PHONY: all
 all: $(LIB) $(NAME).pc
@@ -35,9 +36,21 @@ $(LIB): $(OBJECTS)
 
 glibrdf.o: glibrdf.h
 
+.PHONY: check
+check: tests
+	env MALLOC_CHECK_=2 \
+	    G_DEBUG="fatal_warnings fatal_criticals" \
+	    G_SLICE="debug-blocks" \
+	    gtester ./tests --verbose
+
+tests: $(OBJECTS) $(TEST_OBJECTS)
+	$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
+
+test_literal_gvalue.o: glibrdf.h
+
 .PHONY: clean
 clean:
-	rm -f $(LIB) $(OBJECTS) $(NAME).pc
+	rm -f $(LIB) $(OBJECTS) $(TEST_OBJECTS) $(NAME).pc
 
 .PHONY: install
 install:

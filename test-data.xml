@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.com/">
+    <rdf:Description rdf:about="http://example.com/Resource">
+        <ex:untyped>blah</ex:untyped>
+        <ex:integer rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">123</ex:integer>
+        <ex:date rdf:datatype="http://www.w3.org/TR/xmlschema-2/#date">1986-08-16</ex:date>
+        <ex:datetime rdf:datatype="http://www.w3.org/TR/xmlschema-2/#datetime">2012-07-22T15:57:41+10:00</ex:datetime>
+    </rdf:Description>
+</rdf:RDF>

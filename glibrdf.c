@@ -22,10 +22,28 @@ GType librdf_node_get_gtype(void) {
 
 // glib should do this for me >:(
 static GDate *parse_iso8601_date(const gchar *s) {
-    struct tm tm;
-    if (*strptime(s, "%Y-%m-%d", &tm) != '\0')
+    struct tm tm = {0};
+    if (*strptime(s, "%F", &tm) != '\0')
         return NULL;
     return g_date_new_dmy(tm.tm_mday, 1 + tm.tm_mon, 1900 + tm.tm_year);
+}
+
+// g_time_val_from_iso8601 doesn't preserve timezone >:(((
+static GDateTime *parse_iso8601_datetime(const gchar *s) {
+    struct tm tm = {0};
+    // parse the date and time, timezone will be left at the end
+    const gchar *rest = strptime(s, "%FT%T", &tm);
+    GTimeZone *tz = g_time_zone_new(rest);
+    g_return_val_if_fail(tz != NULL, NULL);
+    GDateTime *result = g_date_time_new(tz,
+            1900 + tm.tm_year,
+            1 + tm.tm_mon,
+            tm.tm_mday,
+            tm.tm_hour,
+            tm.tm_min,
+            (gdouble) tm.tm_sec);
+    g_time_zone_unref(tz);
+    return result;
 }
 
 // XXX handle parse failures more gracefully?
@@ -60,11 +78,10 @@ void librdf_node_get_literal_gvalue(librdf_node *node, GValue *value_out) {
     }
     if (g_strcmp0(datatype_uri_string,
             "http://www.w3.org/TR/xmlschema-2/#datetime") == 0) {
-        GTimeVal tv;
-        bool parsed = g_time_val_from_iso8601(lv, &tv);
-        g_return_if_fail(parsed);
+        GDateTime *datetime = parse_iso8601_datetime(lv);
+        g_return_if_fail(datetime != NULL);
         g_value_init(value_out, G_TYPE_DATE_TIME);
-        g_value_set_boxed(value_out, g_date_time_new_from_timeval_utc(&tv));
+        g_value_set_boxed(value_out, datetime);
         return;
     }
     g_warning("Unhandled RDF type %s", librdf_uri_as_string(datatype_uri));
