@@ -397,6 +397,13 @@ namespace Rdf {
 		LAST
 	}
 
+        [CCode (cname = "librdf_gvalue_adaptor_func", has_target = false)]
+        public delegate GLib.Value GValueAdaptor(string lv);
+        [CCode (cname = "librdf_gvalue_adaptor_map_func", has_target = false)]
+        public delegate GValueAdaptor GValueAdaptorMap(Uri datatype_uri);
+        [CCode (cname = "librdf_default_gvalue_adaptor_map")]
+        public GValueAdaptor default_gvalue_adaptor_map(Uri datatype_uri);
+
 	[Compact]
         [Immutable]
 	[CCode (cname = "librdf_node",
@@ -450,7 +457,7 @@ namespace Rdf {
 		[CCode (cname = "librdf_node_get_literal_value_datatype_uri")]
 		public unowned Uri? get_literal_value_datatype_uri ();
                 [CCode (cname = "librdf_node_get_literal_gvalue")]
-                public GLib.Value get_literal_gvalue();
+                public GLib.Value get_literal_gvalue(GValueAdaptorMap? adaptor_map = null);
 
 		[CCode (cname = "librdf_node_get_li_ordinal")]
 		public int get_li_ordinal ();

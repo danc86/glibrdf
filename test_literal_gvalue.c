@@ -59,7 +59,7 @@ static void test_untyped(FIXTURE_TYPE *fixture, DATA) {
     librdf_node *obj = librdf_model_get_target(fixture->model, subj, prop);
     g_assert(obj != NULL);
     GValue value = {0};
-    librdf_node_get_literal_gvalue(obj, &value);
+    librdf_node_get_literal_gvalue(obj, NULL, &value);
     g_assert(G_VALUE_HOLDS(&value, G_TYPE_STRING));
     g_assert_cmpstr(g_value_get_string(&value), ==, "blah");
     g_value_unset(&value);
@@ -78,7 +78,7 @@ static void test_integer(FIXTURE_TYPE *fixture, DATA) {
     librdf_node *obj = librdf_model_get_target(fixture->model, subj, prop);
     g_assert(obj != NULL);
     GValue value = {0};
-    librdf_node_get_literal_gvalue(obj, &value);
+    librdf_node_get_literal_gvalue(obj, NULL, &value);
     g_assert(G_VALUE_HOLDS(&value, G_TYPE_INT64));
     g_assert_cmpint(g_value_get_int64(&value), ==, 123);
     g_value_unset(&value);
@@ -97,7 +97,7 @@ static void test_date(FIXTURE_TYPE *fixture, DATA) {
     librdf_node *obj = librdf_model_get_target(fixture->model, subj, prop);
     g_assert(obj != NULL);
     GValue value = {0};
-    librdf_node_get_literal_gvalue(obj, &value);
+    librdf_node_get_literal_gvalue(obj, NULL, &value);
     g_assert(G_VALUE_HOLDS(&value, G_TYPE_DATE));
     GDate *date = (GDate *)g_value_get_boxed(&value);
     g_assert_cmpuint(g_date_get_year(date), ==, 1986);
@@ -119,7 +119,7 @@ static void test_datetime(FIXTURE_TYPE *fixture, DATA) {
     librdf_node *obj = librdf_model_get_target(fixture->model, subj, prop);
     g_assert(obj != NULL);
     GValue value = {0};
-    librdf_node_get_literal_gvalue(obj, &value);
+    librdf_node_get_literal_gvalue(obj, NULL, &value);
     g_assert(G_VALUE_HOLDS(&value, G_TYPE_DATE_TIME));
     GDateTime *datetime = (GDateTime *)g_value_get_boxed(&value);
     g_assert_cmpint(g_date_time_get_year(datetime),             ==, 2012);
@@ -136,9 +136,41 @@ static void test_datetime(FIXTURE_TYPE *fixture, DATA) {
     librdf_free_node(subj);
 }
 
+static void custom_adaptor(const gchar *lv, GValue *value_out) {
+    g_value_init(value_out, G_TYPE_STRING);
+    g_value_set_static_string(value_out, "custom");
+    return;
+}
+static librdf_gvalue_adaptor_func custom_adaptor_map(librdf_uri *datatype_uri) {
+    const gchar *datatype_uri_string =
+        (const gchar *)librdf_uri_as_string(datatype_uri);
+    if (g_strcmp0(datatype_uri_string, "http://example.com/customType") == 0)
+        return custom_adaptor;
+    return librdf_default_gvalue_adaptor_map(datatype_uri);
+}
+static void test_custom_adaptor(FIXTURE_TYPE *fixture, DATA) {
+    librdf_node *subj = librdf_new_node_from_uri_string(fixture->world,
+            (const unsigned char *)"http://example.com/Resource");
+    g_assert(subj != NULL);
+    librdf_node *prop = librdf_new_node_from_uri_string(fixture->world,
+            (const unsigned char *)"http://example.com/custom");
+    g_assert(prop != NULL);
+    librdf_node *obj = librdf_model_get_target(fixture->model, subj, prop);
+    g_assert(obj != NULL);
+    GValue value = {0};
+    librdf_node_get_literal_gvalue(obj, custom_adaptor_map, &value);
+    g_assert(G_VALUE_HOLDS(&value, G_TYPE_STRING));
+    g_assert_cmpstr(g_value_get_string(&value), ==, "custom");
+    g_value_unset(&value);
+    librdf_free_node(obj);
+    librdf_free_node(prop);
+    librdf_free_node(subj);
+}
+
 void add_literal_gvalue_tests(void) {
     TEST_ADD(test_untyped);
     TEST_ADD(test_integer);
     TEST_ADD(test_date);
     TEST_ADD(test_datetime);
+    TEST_ADD(test_custom_adaptor);
 }
