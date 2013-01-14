@@ -308,11 +308,11 @@ namespace Rdf {
 		[CCode (cname = "librdf_model_get_targets")]
 		public Iterator? get_targets (Node source, Node arc);
 		[CCode (cname = "librdf_model_get_source")]
-		public Node get_source (Node arc, Node target);
+                public Node? get_source (Node arc, Node target);
 		[CCode (cname = "librdf_model_get_arc")]
-		public Node get_arc (Node source, Node target);
+                public Node? get_arc (Node source, Node target);
 		[CCode (cname = "librdf_model_get_target")]
-		public Node get_target (Node source, Node arc);
+                public Node? get_target (Node source, Node arc);
 
 		[CCode (cname = "librdf_model_get_arcs_in")]
 		public Iterator? get_arcs_in (Node node);
