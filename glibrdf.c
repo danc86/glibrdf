@@ -60,7 +60,7 @@ static void date(const gchar *lv, GValue *value_out) {
     GDate *date = parse_iso8601_date(lv);
     g_return_if_fail(date != NULL);
     g_value_init(value_out, G_TYPE_DATE);
-    g_value_set_boxed(value_out, date);
+    g_value_take_boxed(value_out, date);
     return;
 }
 
@@ -68,7 +68,7 @@ static void datetime(const gchar *lv, GValue *value_out) {
     GDateTime *datetime = parse_iso8601_datetime(lv);
     g_return_if_fail(datetime != NULL);
     g_value_init(value_out, G_TYPE_DATE_TIME);
-    g_value_set_boxed(value_out, datetime);
+    g_value_take_boxed(value_out, datetime);
     return;
 }
 
